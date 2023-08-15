@@ -6,13 +6,24 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mysql-db
+      - postgres-db
+
+  postgres-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: jwt_security
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
   mysql-db:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: jwt_security
+      MYSQL_DATABASE: file_info
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
     ports:
@@ -20,16 +31,19 @@ services:
     volumes:
       - ./mysqldata:/var/lib/mysql
 
-#  postgres-db:
-#    image: postgres:latest
-#    environment:
-#      POSTGRES_USER: myuser
-#      POSTGRES_PASSWORD: mypassword
-#      POSTGRES_DB: jwt_security
-#    ports:
-#      - "5432:5432"
-#    volumes:
-#      - pgdata:/var/lib/postgresql/data
-#
-#volumes:
-#  pgdata:
+  video-streamer-service:
+    build: ./videoStreamer
+    ports:
+      - "5173:5173"
+    depends_on:
+      - file-system-service
+
+  file-system-service:
+    build: ./fileSystem
+    ports:
+      - "3000:3000"
+    # volumes:
+    #   - ./fileUpload/uploads:/usr/src/app/uploads  # Assuming your server saves files to an 'uploads' directory
+
+volumes:
+  pgdata:

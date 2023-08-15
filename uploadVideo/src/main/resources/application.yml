@@ -1,0 +1,16 @@
+spring:
+  datasource:
+#    url: jdbc:mysql://containerization-mysql-db-1:3306/file_info
+    url: jdbc:mysql://localhost:3306/file_info
+    username: myuser
+    password: mypassword
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
