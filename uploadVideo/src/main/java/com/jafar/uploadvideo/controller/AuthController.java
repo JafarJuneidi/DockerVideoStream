@@ -25,31 +25,25 @@ public class AuthController {
 
     @PostMapping("/login")
     public String processLogin(@ModelAttribute UserDto userDto, RedirectAttributes redirectAttributes) {
-        // Setup request headers, e.g., Content-Type header
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<UserDto> request = new HttpEntity<>(userDto, headers);
 
-        // Make the POST request
-        // Create an instance of RestTemplate and send the request
         try {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> response = restTemplate.exchange(
-                    "http://containerization-authentication-service-1:8080/api/v1/auth/login",
+                    "http://containerization-authentication-service-1:8080/api/v1/auth/authenticate",
                     HttpMethod.POST,
                     request,
                     String.class
             );
 
-            // Extract the token from the response, if needed
             String token = response.getBody();
-            // Assuming you'll want to save the token or use it in some manner
-            // Save it to session, database, etc. depending on your application's needs
-            return "redirect:/upload";  // Redirect to upload page after successful authentication
+            return "redirect:/upload";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Login failed. Something went wrong.");
         }
-        return "redirect:/login";  // Redirect back to registration page with an error message
+        return "redirect:/login";
     }
 
     @GetMapping("/register")
@@ -60,31 +54,25 @@ public class AuthController {
 
     @PostMapping("/register")
     public String processRegistration(@ModelAttribute UserDto userDto, RedirectAttributes redirectAttributes) {
-        // Setup request headers, e.g., Content-Type header
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<UserDto> request = new HttpEntity<>(userDto, headers);
 
-        // Make the POST request
-        // Create an instance of RestTemplate and send the request
         try {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> response = restTemplate.exchange(
-                    "http://containerization-authentication-service-1:8080/api/v1/auth/authenticate",
+                    "http://containerization-authentication-service-1:8080/api/v1/auth/register",
                     HttpMethod.POST,
                     request,
                     String.class
             );
 
-            // Extract the token from the response, if needed
             String token = response.getBody();
-            // Assuming you'll want to save the token or use it in some manner
-            // Save it to session, database, etc. depending on your application's needs
-            return "redirect:/upload";  // Redirect to upload page after successful authentication
+            return "redirect:/upload";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Registration failed. Something went wrong.");
         }
-        return "redirect:/register";  // Redirect back to registration page with an error message
+        return "redirect:/register";
     }
 }
 

@@ -10,8 +10,8 @@ app.use(cors());
 
 // Create a connection pool to the database
 const pool = mysql.createPool({
-    // host: 'containerization-mysql-db-1',
-    host: 'localhost',
+    host: 'containerization-mysql-db-1',
+    // host: 'localhost',
     port: 3306,
     user: 'myuser',
     password: 'mypassword',

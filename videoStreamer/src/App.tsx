@@ -1,8 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
+import Modal from 'react-modal';
+import { Link, Redirect, Route, Switch, useLocation, useRoute } from "wouter";
+import { AuthProvider, useAuth } from "./AuthContext";
+import { response } from "express";
+import axios from "axios";
+import { setMaxParserCache } from "mysql2";
 
 function App() {
     return (
-        <MP4Table />
+        <AuthProvider>
+            <Switch>
+                <Route path="/login">{() => <Login />}</Route>
+                <Route path="/register">{() => <Register />}</Route>
+                <Route path="/">{() => <MP4Table />}</Route>
+            </Switch>
+        </AuthProvider >
     );
 }
 
@@ -23,7 +35,6 @@ function MP4Table() {
                     throw new Error('Network response was not ok');
                 }
                 const result = await response.json();
-                console.log(result);
                 setFiles(result);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -79,8 +90,6 @@ function MP4Table() {
     );
 }
 
-import Modal from 'react-modal';
-
 Modal.setAppElement('#root');
 
 const FileItem = ({ fileName }: { fileName: string }) => {
@@ -119,5 +128,127 @@ const FileItem = ({ fileName }: { fileName: string }) => {
         </>
     );
 };
+
+function Register() {
+    const { setAuthToken } = useAuth();
+    const [, navigate] = useLocation();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [firstname, setFirstname] = useState("");
+    const [lastname, setLastname] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleSubmit = async () => {
+        setLoading(true);
+        try {
+            // const response = await axios.post('http://containerization-authentication-service-1:8080/api/v1/auth/register', {firstname, lastname, email, password});
+            const response = await axios.post('http://localhost:8080/api/v1/auth/register', {firstname, lastname, email, password});
+            setAuthToken(response.data.token);
+            navigate("/");
+        } catch (err) {
+            setError('An error occurred');
+        }
+        setLoading(false);
+    };
+
+    return (
+        <div className="flex h-screen items-center justify-center bg-gray-200">
+            <div className="bg-white p-8 rounded shadow-md w-96">
+                <h2 className="text-2xl mb-4">Register</h2>
+                <input
+                    className="border mb-4 p-2 w-full"
+                    type="text"
+                    placeholder="First Name"
+                    value={firstname}
+                    onChange={(e) => setFirstname(e.target.value)}
+                />
+                <input
+                    className="border mb-4 p-2 w-full"
+                    type="text"
+                    placeholder="Last Name"
+                    value={lastname}
+                    onChange={(e) => setLastname(e.target.value)}
+                />
+                <input
+                    className="border mb-4 p-2 w-full"
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <input
+                    className="border mb-4 p-2 w-full"
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                    className={`bg-blue-500 text-white p-2 w-full mb-4 rounded ${loading ? 'opacity-50' : ''}`}
+                    disabled={loading}
+                    onClick={handleSubmit}
+                >
+                    {loading ? 'Loading...' : 'Register'}
+                </button>
+                {error && <p className="text-red-500">{error}</p>}
+                <Link to="/login">Already have an account? Login</Link>
+            </div>
+        </div>
+    );
+}
+
+function Login() {
+    const { setAuthToken } = useAuth();
+    const [, navigate] = useLocation();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleSubmit = async () => {
+        setLoading(true);
+        try {
+            // const response = await axios.post('http://containerization-authentication-service-1:8080/api/v1/auth/authenticate', {email, password});
+            const response = await axios.post('http://localhost:8080/api/v1/auth/authenticate', {email, password});
+            setAuthToken(response.data.token);
+            navigate("/");
+        } catch (err) {
+            setError('An error occurred');
+        }
+        setLoading(false);
+    };
+
+    return (
+        <div className="flex h-screen items-center justify-center bg-gray-200">
+            <div className="bg-white p-8 rounded shadow-md w-96">
+                <h2 className="text-2xl mb-4">Login</h2>
+                <input
+                    className="border mb-4 p-2 w-full"
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <input
+                    className="border mb-4 p-2 w-full"
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                    className={`bg-blue-500 text-white p-2 w-full mb-4 rounded ${loading ? 'opacity-50' : ''}`}
+                    disabled={loading}
+                    onClick={handleSubmit}
+                >
+                    {loading ? 'Loading...' : 'Login'}
+                </button>
+                {error && <p className="text-red-500">{error}</p>}
+                <Link to="/register">Don't have an account? Register</Link>
+            </div>
+        </div>
+    );
+}
 
 export default App;

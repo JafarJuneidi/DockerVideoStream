@@ -27,8 +27,6 @@ services:
       - mysql-db
     restart:
       always
-    # networks:
-    #   - upload
 
   mysql-db:
     image: mysql:latest
@@ -45,6 +43,7 @@ services:
     build: ./videoStreamer
     ports:
       - "5173:5173"
+      - "3001:3001"
     depends_on:
       - file-system-service
 
@@ -52,14 +51,8 @@ services:
     build: ./fileSystem
     ports:
       - "3000:3000"
-    # networks:
-    #   - upload
     # volumes:
     #   - ./fileUpload/uploads:/usr/src/app/uploads  # Assuming your server saves files to an 'uploads' directory
 
 volumes:
   pgdata:
-
-networks:
-  upload:
-    driver: bridge
