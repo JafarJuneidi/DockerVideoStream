@@ -31,4 +31,9 @@ public class FileServiceImpl implements FileService {
                 .name(file.getName())
                 .build();
     }
+
+    @Override
+    public File addFile(File file) {
+        return fileRepository.save(file);
+    }
 }

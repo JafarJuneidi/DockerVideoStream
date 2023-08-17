@@ -19,17 +19,27 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  upload-video-service:
+    build: ./uploadVideo
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql-db
+    restart:
+      always
+    # networks:
+    #   - upload
+
   mysql-db:
-    image: mysql:8.0
+    image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: file_info
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
     ports:
       - "3306:3306"
     volumes:
-      - ./mysqldata:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
 
   video-streamer-service:
     build: ./videoStreamer
@@ -42,8 +52,14 @@ services:
     build: ./fileSystem
     ports:
       - "3000:3000"
+    # networks:
+    #   - upload
     # volumes:
     #   - ./fileUpload/uploads:/usr/src/app/uploads  # Assuming your server saves files to an 'uploads' directory
 
 volumes:
   pgdata:
+
+networks:
+  upload:
+    driver: bridge

@@ -6,5 +6,6 @@ import com.jafar.uploadvideo.models.File;
 import java.util.List;
 
 public interface FileService {
-    public List<FileDto> findAll();
+    List<FileDto> findAll();
+    File addFile(File file);
 }

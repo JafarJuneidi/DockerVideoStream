@@ -19,5 +19,7 @@ RUN npx tsc --init
 
 RUN npx tsc
 
+EXPOSE 3000
+
 # Start the app
 CMD [ "node", "server.js"]

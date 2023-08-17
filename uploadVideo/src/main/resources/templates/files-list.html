@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{layout}">
 <head>
-    <meta charset="UTF-8">
     <title>File List</title>
-    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-6">
-
-<div class="container mx-auto">
+<main layout:fragment="content" class="container mx-auto">
     <h1 class="text-3xl font-bold mb-4">File List</h1>
-
     <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
         <thead>
         <tr class="bg-gray-300 text-gray-600 uppercase text-sm leading-normal">
@@ -25,7 +23,5 @@
         </tr>
         </tbody>
     </table>
-</div>
-
-</body>
+</main>
 </html>

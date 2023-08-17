@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<div layout:fragment="content" class="flex justify-center items-center h-screen bg-gradient-to-r from-gray-300 to-gray-400">
+    <div class="w-1/5 bg-gray-300 p-6 rounded shadow">
+        <h1 class="text-2xl font-semibold mb-4">Register</h1>
+        <form th:action="@{/register}" method="post" th:object="${userDto}">
+            <div class="mb-4">
+                <label class="block text-sm font-bold mb-2" for="firstname">First Name:</label>
+                <input th:field="*{firstname}" class="shadow appearance-none border rounded w-full py-2 px-3" id="firstname" type="text" required autofocus>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-bold mb-2" for="lastname">Last Name:</label>
+                <input th:field="*{lastname}" class="shadow appearance-none border rounded w-full py-2 px-3" id="lastname" type="text" name="lastname" required autofocus>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-bold mb-2" for="email">Email:</label>
+                <input th:field="*{email}" class="shadow appearance-none border rounded w-full py-2 px-3" id="email" type="email" name="email" required autofocus>
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-bold mb-2" for="password">Password:</label>
+                <input th:field="*{password}" class="shadow appearance-none border rounded w-full py-2 px-3" id="password" type="password" name="password" required>
+            </div>
+            <div class="flex items-center justify-between mb-4">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Register</button>
+            </div>
+            <div th:if="${error}" class="bg-red-500 text-white p-3 rounded mb-4">
+                <p th:text="${error}"></p>
+            </div>
+        </form>
+        <div class="mt-4">
+            Already have an account? <a href="/login" class="text-blue-600 hover:text-blue-800">Login here</a>
+        </div>
+    </div>
+</div>
+</html>
